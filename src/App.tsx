@@ -16,7 +16,7 @@ function App() {
         }}>
         <Layout className="App">
           <Header className="Header">
-            <h1>Demo</h1>
+            <h1>XTools</h1>
           </Header>
           <Content className="Content">
             <RouteView />
