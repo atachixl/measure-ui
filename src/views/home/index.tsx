@@ -1,23 +1,25 @@
-import { Button, Col, Form, Input, InputNumber, Row, Select } from 'antd';
+import { Button, Col, Form, Input, InputNumber, message, Row, Select, Space } from 'antd';
 import style from './index.module.scss';
 import { useState } from 'react';
 
 export
 function Home() {
   const [result, setResult] = useState<string>('');
+  const [form] = Form.useForm();
 
   const handleFormChange = (values: any) => {
     console.log(values);
     setResult(JSON.stringify(values));
+    message.success('计算成功');
   };
 
   return <div className={style.com}>
     <Row gutter={16}>
-      <Col span={12}>
+      <Col span={24}>
         <Form
           className={style.form}
           layout="vertical"
-          onValuesChange={(_, values) => handleFormChange(values)}>
+          form={form}>
           <Form.Item
             label="数字"
             name="a">
@@ -41,10 +43,19 @@ function Home() {
               <Select key="2">选项2</Select>
             </Select>
           </Form.Item>
+          <Form.Item>
+            <Space>
+              <Button onClick={() => form.resetFields()}>重置</Button>
+              <Button type="primary" onClick={async () => {
+                const data = await form.validateFields();
+                handleFormChange(data);
+              }}>计算</Button>
+            </Space>
+          </Form.Item>
+          <Form.Item label="结果">
+            <pre className={style.pre}>{result}</pre>
+          </Form.Item>
         </Form>
-      </Col>
-      <Col span={12}>
-        <pre className={style.pre}>{result}</pre>
       </Col>
     </Row>
   </div>;
