@@ -2,6 +2,27 @@ import { Button, Card, Col, Form, Input, InputNumber, message, QRCode, Row, Sele
 import style from './index.module.scss';
 import { useState } from 'react';
 
+const getNumberValidator = (min?: number, max?: number, rangeType = 3) => {
+  return (_, value: number) => new Promise((resolve, reject) => {
+    const leftClose = !!((rangeType & 0x02) >> 1);
+    const rightClose = !!(rangeType & 0x01);
+    const result = (min == null || (leftClose ? value >= min : value > min)) &&
+      (max == null || (rightClose ? value <= max : value < max));
+    if (result) resolve(value);
+    else {
+      let errorMsg = '';
+      if (min == null) errorMsg = `数值必须小于${rightClose ? '(等于)' : ''} ${max}`;
+      else if (max == null) errorMsg = `数值必须大于${leftClose ? '(等于)' : ''} ${min}`;
+      else errorMsg = `数值必须在 ${min}${leftClose ? '(包含)' : ''} 到 ${max}${rightClose ? '(包含)' : ''} 之间`;
+      reject(errorMsg);
+    }
+  });
+};
+const validator = (_, value) => new Promise((resolve, reject) => {
+  if (value > 0) resolve(value);
+  else reject('请输入大于0的数字');
+});
+
 export
 function Home() {
   const [form] = Form.useForm();
@@ -31,9 +52,8 @@ function Home() {
               <span className={style.tip}>请输入大于0的数字</span>
             </span>}
             name="total_volume"
-            rules={[{ required: true, message: '请输入总量' }]}>
+            rules={[{ validator: getNumberValidator(0, null, 0) }]}>
             <InputNumber
-              min={0}
               placeholder="请输入总量"
             />
           </Form.Item>
@@ -44,9 +64,8 @@ function Home() {
               <span className={style.tip}>请输入大于0的数字</span>
             </span>}
             name="time1"
-            rules={[{ required: true, message: '请输入第一阶段输血时间' }]}>
+            rules={[{ validator: getNumberValidator(1, null, 3) }]}>
             <InputNumber
-              min={1}
               placeholder="请输入第一阶段输血时间"
             />
           </Form.Item>
@@ -57,9 +76,8 @@ function Home() {
               <span className={style.tip}>请输入大于0的数字</span>
             </span>}
             name="gtt_rate"
-            rules={[{ required: true, message: '请输入点滴系数' }]}>
+            rules={[{ validator: getNumberValidator(0, null, 0) }]}>
             <InputNumber
-              min={0}
               placeholder="请输入点滴系数"
             />
           </Form.Item>
@@ -71,9 +89,8 @@ function Home() {
                 <span className={style.tip}>请输入大于0的数字</span>
               </span>}
               name="drip_rate1"
-              rules={[{ required: true, message: '请输入第一阶段输液滴速' }]}>
+              rules={[{ validator: getNumberValidator(1, null, 3) }]}>
               <InputNumber
-                min={1}
                 placeholder="请输入第一阶段输液滴速"
               />
             </Form.Item>
@@ -86,7 +103,7 @@ function Home() {
                 <span className={style.tip}>请输入大于0的数字</span>
               </span>}
               name="drip_rate2"
-              rules={[{ required: true, message: '请输入第二阶段输液滴速' }]}>
+              rules={[{ validator: getNumberValidator(1, null, 3) }]}>
               <InputNumber
                 min={1}
                 placeholder="请输入第二阶段输液滴速"
