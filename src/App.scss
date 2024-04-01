@@ -1,0 +1,26 @@
+.App {
+  font-size: 14px;
+  min-height: 100vh;
+}
+
+.Header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3.6rem;
+  z-index: 20;
+  padding: 0 1.5rem;
+  background-color: white;
+  box-shadow: 0 0 10px 4px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Content {
+  margin-top: 3.6rem;
+  > div {
+    padding: 1.2rem 1.5rem 8rem 1.5rem;
+  }
+}
