@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, InputNumber, message, Row, Select, Space } from 'antd';
+import { Button, Col, Form, Input, InputNumber, message, QRCode, Row, Select, Space } from 'antd';
 import style from './index.module.scss';
 import { useState } from 'react';
 
