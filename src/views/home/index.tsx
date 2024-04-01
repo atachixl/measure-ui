@@ -1,20 +1,25 @@
-import { Button, Card, Col, Form, Input, InputNumber, message, QRCode, Row, Select, Space } from 'antd';
+import { Button, Card, Col, Form, Input, InputNumber, message, QRCode, Row, Select, Space, Statistic } from 'antd';
 import style from './index.module.scss';
 import { useState } from 'react';
 
 export
 function Home() {
-  const [result, setResult] = useState<string>('');
   const [form] = Form.useForm();
+  const [time1, setTime1] = useState<number>(0);
+  const [time2, setTime2] = useState<number>(0);
 
   const handleFormChange = (values: any) => {
-    console.log(values);
-    setResult(JSON.stringify(values));
+    const time1 = values.time1;
+    const infused_volume1 = (time1 * values.drip_rate1) / values.gtt_rate;
+    const infused_volume2 = values.total_volume - infused_volume1;
+    const time2 = (infused_volume2 * values.gtt_rate) / values.drip_rate2;
+    setTime1(time1);
+    setTime2(time2);
     message.success('计算成功');
   };
 
   return <div className={style.com}>
-    <Row gutter={16}>
+    <Row>
       <Col span={24}>
         <Form
           className={style.form}
@@ -23,12 +28,12 @@ function Home() {
           <Form.Item
             label={<span>
               <span>总量(ml)</span>
-              <span className={style.tip}></span>
+              <span className={style.tip}>请输入大于0的数字</span>
             </span>}
-            name="a"
-            rules={[{ required: true }]}>
+            name="total_volume"
+            rules={[{ required: true, message: '请输入总量' }]}>
             <InputNumber
-              min={1}
+              min={0}
               placeholder="请输入总量"
             />
           </Form.Item>
@@ -36,10 +41,10 @@ function Home() {
           <Form.Item
             label={<span>
               <span>第一阶段输血时间(min)</span>
-              <span className={style.tip}></span>
+              <span className={style.tip}>请输入大于0的数字</span>
             </span>}
-            name="a"
-            rules={[{ required: true }]}>
+            name="time1"
+            rules={[{ required: true, message: '请输入第一阶段输血时间' }]}>
             <InputNumber
               min={1}
               placeholder="请输入第一阶段输血时间"
@@ -49,12 +54,12 @@ function Home() {
           <Form.Item
             label={<span>
               <span>点滴系数</span>
-              <span className={style.tip}></span>
+              <span className={style.tip}>请输入大于0的数字</span>
             </span>}
-            name="a"
-            rules={[{ required: true }]}>
+            name="gtt_rate"
+            rules={[{ required: true, message: '请输入点滴系数' }]}>
             <InputNumber
-              min={1}
+              min={0}
               placeholder="请输入点滴系数"
             />
           </Form.Item>
@@ -63,10 +68,10 @@ function Home() {
             <Form.Item
               label={<span>
                 <span>第一阶段输液滴速(滴/min)</span>
-                <span className={style.tip}></span>
+                <span className={style.tip}>请输入大于0的数字</span>
               </span>}
-              name="a"
-              rules={[{ required: true }]}>
+              name="drip_rate1"
+              rules={[{ required: true, message: '请输入第一阶段输液滴速' }]}>
               <InputNumber
                 min={1}
                 placeholder="请输入第一阶段输液滴速"
@@ -78,10 +83,10 @@ function Home() {
             <Form.Item
               label={<span>
                 <span>第二阶段输液滴速(滴/min)</span>
-                <span className={style.tip}></span>
+                <span className={style.tip}>请输入大于0的数字</span>
               </span>}
-              name="a"
-              rules={[{ required: true }]}>
+              name="drip_rate2"
+              rules={[{ required: true, message: '请输入第二阶段输液滴速' }]}>
               <InputNumber
                 min={1}
                 placeholder="请输入第二阶段输液滴速"
@@ -89,22 +94,6 @@ function Home() {
             </Form.Item>
           </Card>
 
-          {/* <Form.Item
-            label="文本"
-            name="b">
-            <Input
-              placeholder="请输入文本"
-            />
-          </Form.Item>
-          <Form.Item
-            label="选项"
-            name="c">
-            <Select
-              placeholder="请选择项目">
-              <Select key="1">选项1</Select>
-              <Select key="2">选项2</Select>
-            </Select>
-          </Form.Item> */}
           <Form.Item className={style.row}>
             <Space>
               <Button onClick={() => form.resetFields()}>重置</Button>
@@ -119,7 +108,23 @@ function Home() {
             </Space>
           </Form.Item>
           <Form.Item label="结果">
-            <pre className={style.pre}>{result}</pre>
+            <pre className={style.pre}>
+              <Statistic
+                title="第一阶段时间"
+                value={time1}
+                suffix="分钟"
+              />
+              <Statistic
+                title="第二阶段时间"
+                value={time2}
+                suffix="分钟"
+              />
+              <Statistic
+                title="总时间"
+                value={time1 + time2}
+                suffix="分钟"
+              />
+            </pre>
           </Form.Item>
         </Form>
       </Col>

@@ -1,6 +1,8 @@
 import { Button, ConfigProvider, Layout, Popover, QRCode, Space } from 'antd';
 import { BrowserRouter } from 'react-router-dom';
 import { RouteView } from './routes';
+import zhCN from 'antd/locale/zh_CN';
+import 'dayjs/locale/zh-cn';
 import './App.scss';
 import cat_img from './cat.jpeg';
 
@@ -10,6 +12,7 @@ function App() {
   return (
     <BrowserRouter>
       <ConfigProvider
+        locale={zhCN}
         theme={{
           token: {
             borderRadius: 0,
