@@ -21,9 +21,15 @@ function Home() {
           layout="vertical"
           form={form}>
           <Form.Item
-            label="数字"
-            name="a">
+            label={<span>
+              <span>数字</span>
+              <span className={style.tip}>填写50~80范围</span>
+            </span>}
+            name="a"
+            rules={[{ required: true }]}>
             <InputNumber
+              min={50}
+              max={80}
               placeholder="请输入数字"
             />
           </Form.Item>
@@ -47,8 +53,12 @@ function Home() {
             <Space>
               <Button onClick={() => form.resetFields()}>重置</Button>
               <Button type="primary" onClick={async () => {
-                const data = await form.validateFields();
-                handleFormChange(data);
+                try {
+                  const data = await form.validateFields();
+                  handleFormChange(data);
+                } catch (error) {
+                  console.error(error);
+                }
               }}>计算</Button>
             </Space>
           </Form.Item>
