@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, InputNumber, message, QRCode, Row, Select, Space } from 'antd';
+import { Button, Card, Col, Form, Input, InputNumber, message, QRCode, Row, Select, Space } from 'antd';
 import style from './index.module.scss';
 import { useState } from 'react';
 
@@ -22,18 +22,74 @@ function Home() {
           form={form}>
           <Form.Item
             label={<span>
-              <span>数字</span>
-              <span className={style.tip}>填写50~80范围</span>
+              <span>总量(ml)</span>
+              <span className={style.tip}></span>
             </span>}
             name="a"
             rules={[{ required: true }]}>
             <InputNumber
-              min={50}
-              max={80}
-              placeholder="请输入数字"
+              min={1}
+              placeholder="请输入总量"
             />
           </Form.Item>
+
           <Form.Item
+            label={<span>
+              <span>第一阶段输血时间(min)</span>
+              <span className={style.tip}></span>
+            </span>}
+            name="a"
+            rules={[{ required: true }]}>
+            <InputNumber
+              min={1}
+              placeholder="请输入第一阶段输血时间"
+            />
+          </Form.Item>
+
+          <Form.Item
+            label={<span>
+              <span>点滴系数</span>
+              <span className={style.tip}></span>
+            </span>}
+            name="a"
+            rules={[{ required: true }]}>
+            <InputNumber
+              min={1}
+              placeholder="请输入点滴系数"
+            />
+          </Form.Item>
+
+          <Card className={style.row} title="第一阶段">
+            <Form.Item
+              label={<span>
+                <span>第一阶段输液滴速(滴/min)</span>
+                <span className={style.tip}></span>
+              </span>}
+              name="a"
+              rules={[{ required: true }]}>
+              <InputNumber
+                min={1}
+                placeholder="请输入第一阶段输液滴速"
+              />
+            </Form.Item>
+          </Card>
+
+          <Card className={style.row} title="第二阶段">
+            <Form.Item
+              label={<span>
+                <span>第二阶段输液滴速(滴/min)</span>
+                <span className={style.tip}></span>
+              </span>}
+              name="a"
+              rules={[{ required: true }]}>
+              <InputNumber
+                min={1}
+                placeholder="请输入第二阶段输液滴速"
+              />
+            </Form.Item>
+          </Card>
+
+          {/* <Form.Item
             label="文本"
             name="b">
             <Input
@@ -48,8 +104,8 @@ function Home() {
               <Select key="1">选项1</Select>
               <Select key="2">选项2</Select>
             </Select>
-          </Form.Item>
-          <Form.Item>
+          </Form.Item> */}
+          <Form.Item className={style.row}>
             <Space>
               <Button onClick={() => form.resetFields()}>重置</Button>
               <Button type="primary" onClick={async () => {
