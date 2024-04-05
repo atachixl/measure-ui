@@ -28,15 +28,51 @@ function Home() {
   const [form] = Form.useForm();
   const [time1, setTime1] = useState<number>(0);
   const [time2, setTime2] = useState<number>(0);
+  const [tip1, setTip1] = useState<string>("20-40滴/分");
+  const [tip2, setTip2] = useState<string>("60-80滴/分");
+  const [tip3, setTip3] = useState<string>("200ml=1u");
+  const [minute, setMinute] = useState<number>(15);
 
   const handleFormChange = (values: any) => {
-    const time1 = values.time1;
-    const infused_volume1 = (time1 * values.drip_rate1) / values.gtt_rate;
-    const infused_volume2 = values.total_volume - infused_volume1;
-    const time2 = (infused_volume2 * values.gtt_rate) / values.drip_rate2;
-    setTime1(time1);
-    setTime2(time2);
+    let p1ml = parseFloat((values.drip_rate1 / 20).toFixed(4));
+    let p2ml = parseFloat((values.drip_rate2 / 20).toFixed(4));
+    let p1mlTotal = p1ml * values.minute;
+    if(values.total_volume <= p1mlTotal) {
+      setTime1(parseFloat((values.total_volume / p1ml).toFixed(4)));
+      setTime2(0);
+    } else {
+      setTime1(values.minute);
+      setTime2(parseFloat(((values.total_volume - p1mlTotal) / p2ml).toFixed(4)));
+    }
     message.success('计算成功');
+  };
+
+  const handleSelectChange = (value: string) => {
+    if(value == "1") {
+      setTip1("20-40滴/分");
+      setTip2("60-80滴/分");
+      setTip3("200ml=1u");
+    } else if(value == "2") {
+      setTip1("40-100滴/分");
+      setTip2("100滴/分");
+      setTip3("");
+    } else if(value == "3") {
+      setTip1("100滴/分");
+      setTip2("100滴/分");
+      setTip3("20-25ml=1u");
+    } else if(value == "4") {
+      setTip1("200滴/分");
+      setTip2("");
+      setTip3("");
+    } else if(value == "5") {
+      setTip1("20-40滴/分");
+      setTip2("40-50滴/分");
+      setTip3("");
+    }
+  };
+
+  const handleMinuteChange = (value: number) => {
+    setMinute(value);
   };
 
   return <div className={style.com}>
@@ -47,51 +83,53 @@ function Home() {
           layout="vertical"
           form={form}>
           <Form.Item
+              label="血液成分"
+              name="blood">
+            <Select
+                defaultValue="1"
+                placeholder="请选择血液成分"
+                onChange={handleSelectChange}>
+              <Select key="1">红细胞</Select>
+              <Select key="2">血浆</Select>
+              <Select key="3">血小板</Select>
+              <Select key="4">冷沉淀/凝血因子</Select>
+              <Select key="5">粒细胞</Select>
+            </Select>
+          </Form.Item>
+          <Form.Item
             label={<span>
               <span>总量(ml)</span>
-              <span className={style.tip}>请输入大于0的数字</span>
+              <span className={style.tip}>{tip3}</span>
             </span>}
             name="total_volume"
             rules={[{ validator: getNumberValidator(0, null, 0) }]}>
             <InputNumber
-              placeholder="请输入总量"
-            />
-          </Form.Item>
-
-          <Form.Item
-            label={<span>
-              <span>第一阶段输血时间(min)</span>
-              <span className={style.tip}>请输入大于0的数字</span>
-            </span>}
-            name="time1"
-            rules={[{ validator: getNumberValidator(1, null, 3) }]}>
-            <InputNumber
-              placeholder="请输入第一阶段输血时间"
-            />
-          </Form.Item>
-
-          <Form.Item
-            label={<span>
-              <span>点滴系数</span>
-              <span className={style.tip}>请输入大于0的数字</span>
-            </span>}
-            name="gtt_rate"
-            rules={[{ validator: getNumberValidator(0, null, 0) }]}>
-            <InputNumber
-              placeholder="请输入点滴系数"
+              placeholder="请输入大于0的数字"
             />
           </Form.Item>
 
           <Card className={style.row} title="第一阶段">
             <Form.Item
+                label={<span>
+                <span>第一阶段持续时间(分钟)</span>
+                <span className={style.tip}>请输入大于等于15的数字</span>
+              </span>}
+                name="minute"
+                rules={[{ validator: getNumberValidator(15, null, 3) }]}>
+              <InputNumber
+                  onChange={handleMinuteChange}
+                  placeholder="请输入大于等于15的数字"
+              />
+            </Form.Item>
+            <Form.Item
               label={<span>
-                <span>第一阶段输液滴速(滴/min)</span>
-                <span className={style.tip}>请输入大于0的数字</span>
+                <span>前{minute}分钟输液滴速(滴/分)</span>
+                <span className={style.tip}>{tip1}</span>
               </span>}
               name="drip_rate1"
               rules={[{ validator: getNumberValidator(1, null, 3) }]}>
               <InputNumber
-                placeholder="请输入第一阶段输液滴速"
+                placeholder="请输入大于0的数字"
               />
             </Form.Item>
           </Card>
@@ -99,14 +137,14 @@ function Home() {
           <Card className={style.row} title="第二阶段">
             <Form.Item
               label={<span>
-                <span>第二阶段输液滴速(滴/min)</span>
-                <span className={style.tip}>请输入大于0的数字</span>
+                <span>{minute}分钟后输液滴速(滴/分)</span>
+                <span className={style.tip}>{tip2}</span>
               </span>}
               name="drip_rate2"
               rules={[{ validator: getNumberValidator(1, null, 3) }]}>
               <InputNumber
                 min={1}
-                placeholder="请输入第二阶段输液滴速"
+                placeholder="请输入大于0的数字"
               />
             </Form.Item>
           </Card>
