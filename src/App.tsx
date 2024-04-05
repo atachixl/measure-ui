@@ -22,7 +22,7 @@ function App() {
           <Header className="Header">
             <span className="title">
               <img className="logo" src={cat_img} />
-              <span>输液计算器</span>
+              <span>输血计算器</span>
             </span>
             <Popover
               content={<QRCode
