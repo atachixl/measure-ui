@@ -1,6 +1,6 @@
 import { Button, Card, Col, Form, Input, InputNumber, message, QRCode, Row, Select, Space, Statistic } from 'antd';
 import style from './index.module.scss';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 
 const getNumberValidator = (min?: number, max?: number, rangeType = 3) => {
   return (_, value: number) => new Promise((resolve, reject) => {
@@ -32,6 +32,12 @@ function Home() {
   const [tip2, setTip2] = useState<string>("60-80滴/分");
   const [tip3, setTip3] = useState<string>("200ml=1u");
   const [minute, setMinute] = useState<number>(15);
+
+  useEffect(() => {
+    form.setFieldsValue({
+      minute: 15,
+    });
+  }, []);
 
   const handleFormChange = (values: any) => {
     let p1ml = parseFloat((values.drip_rate1 / 20).toFixed(4));
