@@ -129,7 +129,7 @@ function Home() {
             </Form.Item>
             <Form.Item
               label={<span>
-                <span>前{minute}分钟输液滴速(滴/分)</span>
+                <span>前{minute}分钟输血滴速(滴/分)</span>
                 <span className={style.tip}>{tip1}</span>
               </span>}
               name="drip_rate1"
@@ -143,7 +143,7 @@ function Home() {
           <Card className={style.row} title="第二阶段">
             <Form.Item
               label={<span>
-                <span>{minute}分钟后输液滴速(滴/分)</span>
+                <span>{minute}分钟后输血滴速(滴/分)</span>
                 <span className={style.tip}>{tip2}</span>
               </span>}
               name="drip_rate2"
